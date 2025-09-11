@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter pub:*)",
+      "Bash(dart run:*)",
+      "Bash(flutter clean:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(/mnt/c/flutter/flutter/bin/flutter analyze)",
+      "Bash(find:*)",
+      "Bash(/mnt/c/flutter/flutter/bin/flutter pub get)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
