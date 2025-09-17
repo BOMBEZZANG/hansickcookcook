@@ -11,13 +11,15 @@ import 'presentation/providers/game_provider.dart';
 import 'presentation/providers/statistics_provider.dart';
 import 'presentation/services/app_open_ad_manager.dart';
 import 'presentation/services/interstitial_ad_manager.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart'; // 1. 패키지 import
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   // Initialize Google Mobile Ads SDK
   await MobileAds.instance.initialize();
-  
+  await Future.delayed(const Duration(milliseconds: 500));
+  await AppTrackingTransparency.requestTrackingAuthorization();
   // Initialize Ad Managers
   InterstitialAdManager.instance.initialize();
   

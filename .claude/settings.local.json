@@ -7,7 +7,8 @@
       "Bash(flutter analyze:*)",
       "Bash(/mnt/c/flutter/flutter/bin/flutter analyze)",
       "Bash(find:*)",
-      "Bash(/mnt/c/flutter/flutter/bin/flutter pub get)"
+      "Bash(/mnt/c/flutter/flutter/bin/flutter pub get)",
+      "Bash(rg:*)"
     ],
     "deny": [],
     "ask": []

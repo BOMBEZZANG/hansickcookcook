@@ -121,18 +121,23 @@ class RecipeProvider extends ChangeNotifier {
   
   /// Toggle bookmark for a recipe
   Future<void> toggleBookmark(int recipeId) async {
+    // Find the recipe first
+    final recipeIndex = _allRecipes.indexWhere((r) => r.id == recipeId);
+    if (recipeIndex == -1) return;
+    
+    // Update local state immediately (optimistic update)
+    final previousState = _allRecipes[recipeIndex].bookmarked;
+    _allRecipes[recipeIndex].bookmarked = !previousState;
+    _applyFilters(); // This already calls notifyListeners()
+    
     try {
+      // Then update the repository
       await repository.toggleBookmark(recipeId);
-      
-      // Update local state
-      final recipeIndex = _allRecipes.indexWhere((r) => r.id == recipeId);
-      if (recipeIndex != -1) {
-        _allRecipes[recipeIndex].bookmarked = !_allRecipes[recipeIndex].bookmarked;
-        _applyFilters(); // Refresh displayed recipes
-      }
     } catch (e) {
+      // Revert on error
+      _allRecipes[recipeIndex].bookmarked = previousState;
       _error = 'Failed to toggle bookmark: $e';
-      notifyListeners();
+      _applyFilters();
     }
   }
   

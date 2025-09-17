@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '../../core/config/screenshot_config.dart';
 
 class InterstitialAdManager {
   static final InterstitialAdManager instance = InterstitialAdManager._internal();
   factory InterstitialAdManager() => instance;
   InterstitialAdManager._internal();
 
-  // Test Ad Unit ID for Interstitial ads
-  static const String _adUnitId = 'ca-app-pub-3940256099942544/1033173712';
+  // Production Ad Unit ID for Interstitial ads
+  static const String _adUnitId = 'ca-app-pub-2598779635969436/2651756362';
   
   InterstitialAd? _interstitialAd;
   bool _isLoading = false;
@@ -63,6 +64,13 @@ class InterstitialAdManager {
     required VoidCallback onAdDismissed,
     required VoidCallback onAdFailedToShow,
   }) {
+    // Skip ads in screenshot mode
+    if (ScreenshotConfig.isScreenshotMode) {
+      print('📸 Screenshot mode: Skipping interstitial ad');
+      onAdDismissed();
+      return;
+    }
+    
     print('🎯 Attempting to show Interstitial Ad...');
     print('   - _interstitialAd: ${_interstitialAd != null ? "loaded" : "null"}');
     print('   - _isShowing: $_isShowing');

@@ -49,22 +49,22 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        title: Text(
-          widget.recipe.name,
-          style: AppTextStyles.appBarTitle,
-        ),
-        backgroundColor: widget.recipe.categoryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          Consumer<RecipeProvider>(
-            builder: (context, provider, child) {
-              final recipe = provider.getRecipeById(widget.recipe.id) ?? widget.recipe;
-              
-              return IconButton(
+    return Consumer<RecipeProvider>(
+      builder: (context, provider, child) {
+        final recipe = provider.getRecipeById(widget.recipe.id) ?? widget.recipe;
+        
+        return Scaffold(
+          backgroundColor: AppColors.backgroundColor,
+          appBar: AppBar(
+            title: Text(
+              recipe.name,
+              style: AppTextStyles.appBarTitle,
+            ),
+            backgroundColor: recipe.categoryColor,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            actions: [
+              IconButton(
                 icon: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 200),
                   child: Icon(
@@ -75,9 +75,7 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
                 ),
                 onPressed: _toggleBookmark,
                 tooltip: recipe.bookmarked ? '즐겨찾기 제거' : '즐겨찾기 추가',
-              );
-            },
-          ),
+              ),
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.white),
             onSelected: (value) {
@@ -102,7 +100,7 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
           ),
         ],
       ),
-      body: Column(
+          body: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
@@ -112,14 +110,14 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Recipe Header Info
-                  _buildRecipeHeader(),
+                  _buildRecipeHeader(recipe),
                   const SizedBox(height: 24),
                   
                   // Ingredients Section
                   _buildSection(
                     title: '재료 (Ingredients)',
                     icon: Icons.restaurant,
-                    child: _buildIngredients(),
+                    child: _buildIngredients(recipe),
                   ),
                   const SizedBox(height: 24),
                   
@@ -127,7 +125,7 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
                   _buildSection(
                     title: '주의사항 (Requirements)',
                     icon: Icons.info_outline,
-                    child: _buildRequirements(),
+                    child: _buildRequirements(recipe),
                   ),
                   const SizedBox(height: 24),
                   
@@ -135,26 +133,26 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
                   _buildSection(
                     title: '조리 과정 (Steps)',
                     icon: Icons.format_list_numbered,
-                    child: _buildSteps(),
+                    child: _buildSteps(recipe),
                   ),
                   const SizedBox(height: 24),
                   
                   // Tips Section
-                  if (widget.recipe.tips.isNotEmpty) ...[
+                  if (recipe.tips.isNotEmpty) ...[
                     _buildSection(
                       title: '시험 팁 (Exam Tips)',
                       icon: Icons.lightbulb_outline,
-                      child: _buildTips(),
+                      child: _buildTips(recipe),
                     ),
                     const SizedBox(height: 24),
                   ],
                   
                   // Common Mistakes Section
-                  if (widget.recipe.commonMistakes.isNotEmpty) ...[
+                  if (recipe.commonMistakes.isNotEmpty) ...[
                     _buildSection(
                       title: '주의할 실수 (Common Mistakes)',
                       icon: Icons.warning_outlined,
-                      child: _buildCommonMistakes(),
+                      child: _buildCommonMistakes(recipe),
                     ),
                     const SizedBox(height: 24),
                   ],
@@ -169,10 +167,12 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
           ),
         ],
       ),
+        );
+      },
     );
   }
 
-  Widget _buildRecipeHeader() {
+  Widget _buildRecipeHeader(Recipe recipe) {
     return Card(
       color: Colors.white,
       elevation: 2,
@@ -185,7 +185,7 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
             Row(
               children: [
                 Text(
-                  widget.recipe.categoryIcon,
+                  recipe.categoryIcon,
                   style: const TextStyle(fontSize: 32),
                 ),
                 const SizedBox(width: 12),
@@ -194,14 +194,14 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.recipe.name,
+                        recipe.name,
                         style: AppTextStyles.recipeNameLarge,
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        widget.recipe.category,
+                        recipe.category,
                         style: AppTextStyles.cardSubtitle.copyWith(
-                          color: widget.recipe.categoryColor,
+                          color: recipe.categoryColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -215,13 +215,13 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
               children: [
                 _buildInfoChip(
                   Icons.schedule,
-                  widget.recipe.examTimeFormatted,
+                  recipe.examTimeFormatted,
                   Colors.blue,
                 ),
                 const SizedBox(width: 12),
                 _buildInfoChip(
                   Icons.bar_chart,
-                  '난이도 ${widget.recipe.difficulty}',
+                  '난이도 ${recipe.difficulty}',
                   Colors.orange,
                 ),
                 const SizedBox(width: 12),
@@ -295,7 +295,7 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
     );
   }
 
-  Widget _buildIngredients() {
+  Widget _buildIngredients(Recipe recipe) {
     return Card(
       color: Colors.white,
       elevation: 1,
@@ -305,7 +305,7 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
         child: Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: widget.recipe.ingredients.map((ingredient) {
+          children: recipe.ingredients.map((ingredient) {
             return Chip(
               label: Text(
                 ingredient,
@@ -321,7 +321,7 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
     );
   }
 
-  Widget _buildRequirements() {
+  Widget _buildRequirements(Recipe recipe) {
     return Card(
       color: Colors.white,
       elevation: 1,
@@ -329,12 +329,12 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          children: widget.recipe.requirements.asMap().entries.map((entry) {
+          children: recipe.requirements.asMap().entries.map((entry) {
             final index = entry.key;
             final requirement = entry.value;
             
             return Padding(
-              padding: EdgeInsets.only(bottom: index < widget.recipe.requirements.length - 1 ? 12 : 0),
+              padding: EdgeInsets.only(bottom: index < recipe.requirements.length - 1 ? 12 : 0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -362,7 +362,7 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
     );
   }
 
-  Widget _buildSteps() {
+  Widget _buildSteps(Recipe recipe) {
     return Card(
       color: Colors.white,
       elevation: 1,
@@ -370,12 +370,12 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          children: widget.recipe.steps.asMap().entries.map((entry) {
+          children: recipe.steps.asMap().entries.map((entry) {
             final index = entry.key;
             final step = entry.value;
             
             return Padding(
-              padding: EdgeInsets.only(bottom: index < widget.recipe.steps.length - 1 ? 20 : 0),
+              padding: EdgeInsets.only(bottom: index < recipe.steps.length - 1 ? 20 : 0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -445,7 +445,7 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
     );
   }
 
-  Widget _buildTips() {
+  Widget _buildTips(Recipe recipe) {
     return Card(
       color: Colors.white,
       elevation: 1,
@@ -453,12 +453,12 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          children: widget.recipe.tips.asMap().entries.map((entry) {
+          children: recipe.tips.asMap().entries.map((entry) {
             final index = entry.key;
             final tip = entry.value;
             
             return Padding(
-              padding: EdgeInsets.only(bottom: index < widget.recipe.tips.length - 1 ? 12 : 0),
+              padding: EdgeInsets.only(bottom: index < recipe.tips.length - 1 ? 12 : 0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -481,7 +481,7 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
     );
   }
 
-  Widget _buildCommonMistakes() {
+  Widget _buildCommonMistakes(Recipe recipe) {
     return Card(
       color: Colors.white,
       elevation: 1,
@@ -489,12 +489,12 @@ class _FullRecipeViewScreenState extends State<FullRecipeViewScreen> {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          children: widget.recipe.commonMistakes.asMap().entries.map((entry) {
+          children: recipe.commonMistakes.asMap().entries.map((entry) {
             final index = entry.key;
             final mistake = entry.value;
             
             return Padding(
-              padding: EdgeInsets.only(bottom: index < widget.recipe.commonMistakes.length - 1 ? 12 : 0),
+              padding: EdgeInsets.only(bottom: index < recipe.commonMistakes.length - 1 ? 12 : 0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

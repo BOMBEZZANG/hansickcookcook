@@ -42,7 +42,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
       appBar: AppBar(
         title: Text(
           '학습 통계',
-          style: AppTextStyles.appBarTitle,
+          style: AppTextStyles.appBarTitle.copyWith(color: Colors.black),
         ),
         backgroundColor: AppColors.backgroundColor,
         foregroundColor: Colors.black,

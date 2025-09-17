@@ -199,23 +199,25 @@ class _RecipeCardState extends State<RecipeCard>
                             // Bookmark Button
                             Transform.rotate(
                               angle: _bookmarkRotationAnimation.value,
-                              child: GestureDetector(
-                                onTap: _onBookmarkTap,
-                                child: Container(
-                                  padding: const EdgeInsets.all(4),
-                                  child: AnimatedSwitcher(
-                                    duration: AppAnimations.shortAnimation,
-                                    child: Icon(
-                                      widget.recipe.bookmarked
-                                          ? Icons.bookmark
-                                          : Icons.bookmark_border,
-                                      key: ValueKey(widget.recipe.bookmarked),
-                                      size: 20,
-                                      color: widget.recipe.bookmarked
-                                          ? AppColors.bookmarkActive
-                                          : Colors.white.withOpacity(0.8),
-                                    ),
+                              child: IconButton(
+                                onPressed: _onBookmarkTap,
+                                icon: AnimatedSwitcher(
+                                  duration: AppAnimations.shortAnimation,
+                                  child: Icon(
+                                    widget.recipe.bookmarked
+                                        ? Icons.bookmark
+                                        : Icons.bookmark_border,
+                                    key: ValueKey(widget.recipe.bookmarked),
+                                    size: 20,
+                                    color: widget.recipe.bookmarked
+                                        ? AppColors.bookmarkActive
+                                        : Colors.white.withOpacity(0.8),
                                   ),
+                                ),
+                                padding: const EdgeInsets.all(4),
+                                constraints: const BoxConstraints(
+                                  minWidth: 28,
+                                  minHeight: 28,
                                 ),
                               ),
                             ),

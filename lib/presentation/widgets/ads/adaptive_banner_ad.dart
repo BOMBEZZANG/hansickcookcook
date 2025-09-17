@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/config/screenshot_config.dart';
 
 class AdaptiveBannerAd extends StatefulWidget {
   final bool isFloating;
@@ -21,8 +22,8 @@ class _AdaptiveBannerAdState extends State<AdaptiveBannerAd> {
   bool _isLoaded = false;
   bool _adLoadInitiated = false;
   
-  // Test Banner Ad Unit ID
-  static const String _adUnitId = 'ca-app-pub-3940256099942544/6300978111';
+  // Production Banner Ad Unit ID
+  static const String _adUnitId = 'ca-app-pub-2598779635969436/1725687506';
 
   @override
   void initState() {
@@ -77,6 +78,11 @@ class _AdaptiveBannerAdState extends State<AdaptiveBannerAd> {
 
   @override
   Widget build(BuildContext context) {
+    // Hide ads in screenshot mode
+    if (ScreenshotConfig.isScreenshotMode) {
+      return const SizedBox.shrink();
+    }
+    
     final container = Container(
       margin: widget.margin,
       decoration: BoxDecoration(

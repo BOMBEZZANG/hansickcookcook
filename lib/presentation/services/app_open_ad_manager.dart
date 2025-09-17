@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '../../core/config/screenshot_config.dart';
 
 class AppOpenAdManager {
   static final AppOpenAdManager instance = AppOpenAdManager._internal();
   factory AppOpenAdManager() => instance;
   AppOpenAdManager._internal();
 
-  // Test Ad Unit ID for App Open ads
-  static const String _adUnitId = 'ca-app-pub-3940256099942544/9257395921';
+  // Production Ad Unit ID for App Open ads
+  static const String _adUnitId = 'ca-app-pub-2598779635969436/7413946695';
   
   AppOpenAd? _appOpenAd;
   bool _isShowingAd = false;
@@ -72,6 +73,14 @@ class AppOpenAdManager {
     print('   - _isShowingAd: $_isShowingAd');
     
     // Only show initial ad once - STRICT CHECK
+    // Skip ads in screenshot mode
+    if (ScreenshotConfig.isScreenshotMode) {
+      print('📸 Screenshot mode: Skipping app open ad');
+      _hasShownInitialAd = true; // Mark as shown to prevent future attempts
+      onAdDismissed();
+      return;
+    }
+    
     if (_hasShownInitialAd) {
       print('⏭️ Initial App Open Ad already shown, skipping');
       onAdDismissed();
